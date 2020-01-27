@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+		integrity="sha256-9mbkOfVho3ZPXfM7W8sV2SndrGDuh7wuyLjtsWeTI1Q=" crossorigin="anonymous" />
+	<style>
+		html {
+			height: 10px;
+		}
+
+		body {
+			width: 500px;
+			/* height: 100px; */
+		}
+
+		button {
+			height: 30px;
+			/* width: 30px; */
+			outline: none;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="ui grid" id="container">
+		<div class="sixteen wide column">
+			<!-- <div class="ui hidden attached icon message" id="loading">
+				<i class="notched circle loading icon"></i>
+				<div class="content">
+					<div class="header">
+						Just one second
+					</div>
+					<p>We're fetching that content for you.</p>
+				</div>
+			</div> -->
+			<div class="ui inverted segment">
+				<div class="ui inverted accordion">
+					<div class="title">
+						<i class="dropdown icon"></i>
+						CodeForces
+					</div>
+					<div class="content">
+						<table class="ui unstackable celled inverted table transition hidden" id="table">
+							<thead></thead>
+							<tbody></tbody>
+						</table>
+					</div>
+					<div class="title">
+						<i class="dropdown icon"></i>
+						CodeChef
+					</div>
+					<div class="content">
+						<table class="ui unstackable celled inverted table transition hidden" id="CodeChef">
+							<thead></thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="ui one bottom attached buttons">
+		<div class="ui green button" id="github"><i class="github icon"></i>Github</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
+		integrity="sha256-t8GepnyPmw9t+foMh3mKNvcorqNHamSKtKRxxpUEgFI=" crossorigin="anonymous"></script>
+	<script src="popup.js"></script>
+</body>
+
+</html>
