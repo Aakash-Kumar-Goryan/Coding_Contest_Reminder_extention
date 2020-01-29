@@ -26,11 +26,12 @@ window.onload = () => {
                 Start.push(Table.rows[i].cells[2].innerHTML);
                 End.push(Table.rows[i].cells[3].innerHTML);
             }
-            console.log(headNAME);
-            console.log(contestCODE);
-            console.log(contestNAME);
-            console.log(Start);
-            console.log(End);
+            // console.log('col name: ',headNAME);
+            // console.log('Contest code: ',contestCODE);
+            // console.log('Contest name: ',contestNAME);
+            // console.log('Start: ',Start);
+            // console.log('End: ',End);
+            console.log(parseCodeChefDate(Start[0]));
             AppendCodeChef(contestCODE, contestNAME, Start, End);
         });
 
@@ -40,8 +41,21 @@ window.onload = () => {
         chrome.tabs.create({ url: newURL });
     }
 
-    $('.ui.accordion').accordion()
-        ;
+    $('.ui.accordion').accordion();
+}
+let parseCodeChefDate = (date) => {
+    /// Format being parsed : "01 Feb 2020 <br> 21:05:00"
+    let month = {
+        "Jan" : "01",
+        "Feb" : "02",
+        "Mar" : "03",
+        "Apr" : "04"
+    }
+    let arr = date.split(" ");
+    let t = arr[4].split(":");
+    let p = new Date(arr[2]+"-"+month[arr[1]]+"-"+arr[0]+"T"+t[0]+":"+t[1]+"Z");
+    let DateParsed = new Date(p.getTime() + (p.getTimezoneOffset()*60*1000));   /// correcting according to local time zone
+    return DateParsed;
 }
 
 let AddLoading = () => {
