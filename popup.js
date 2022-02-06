@@ -1,61 +1,44 @@
+var myHeaders = new Headers();
+myHeaders.append("authority", "www.codechef.com");
+myHeaders.append("sec-ch-ua", "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"97\", \"Chromium\";v=\"97\"");
+myHeaders.append("accept", "application/json, text/javascript, */*; q=0.01");
+myHeaders.append("x-requested-with", "XMLHttpRequest");
+myHeaders.append("sec-ch-ua-mobile", "?0");
+myHeaders.append("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36");
+myHeaders.append("sec-ch-ua-platform", "\"Windows\"");
+myHeaders.append("sec-fetch-site", "same-origin");
+myHeaders.append("sec-fetch-mode", "cors");
+myHeaders.append("sec-fetch-dest", "empty");
+myHeaders.append("referer", "https://www.codechef.com/contests/?itm_medium=navmenu&itm_campaign=allcontests_head");
+myHeaders.append("accept-language", "en-US,en;q=0.9,hi;q=0.8");
+myHeaders.append("cookie", "_gcl_au=1.1.902691023.1643476884; _fbp=fb.1.1643476883656.1845843787; _ga=GA1.2.125357324.1643476884; _gid=GA1.2.16410053.1643476884; SESS93b6022d778ee317bf48f7dbffe03173=4eeaf87c5fd3cb4a248e54d7882ebea5; _clck=6ya4a0|1|eyl|0; _clsk=3o2qgs|1643605353250|1|1|b.clarity.ms/collect");
+myHeaders.append("if-none-match", "W/\"1643662696\"");
+myHeaders.append("if-modified-since", "Mon, 31 Jan 2022 20:58:16 +0000");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
 window.onload = () => {
-    // let port = chrome.extension.connect({
-    //     name: "Code Forces Data Request"
-    // });
-    // AddLoading();
     let CodeforcesUrl = `https://codeforces.com/api/contest.list?gym=false`;
     fetch(CodeforcesUrl)
         .then(response => response.json())
         .then(data => {
             AppendCodeforces(data);
         })
-
-    fetch('https://www.codechef.com/contests')
-        .then(response => response.text())
-        .then(data => {
-            let el = document.createElement('html');
-            el.innerHTML = data;
-            let Table = el.getElementsByClassName("dataTable")[1];
-            let contestCODE = [], contestNAME = [], headNAME = [], Start = [], End = [];
-            for (let i = 0; i < Table.rows[0].cells.length; i++) {
-                headNAME.push(Table.rows[0].cells[i].getElementsByTagName('a')[0].innerHTML)
-            }
-            for (let i = 1; i < Table.rows.length; i++) {
-                contestCODE.push(Table.rows[i].cells[0].innerHTML);
-                contestNAME.push(Table.rows[i].cells[1].getElementsByTagName('a')[0].innerHTML);
-                Start.push(Table.rows[i].cells[2].innerHTML);
-                End.push(Table.rows[i].cells[3].innerHTML);
-            }
-            // console.log('col name: ',headNAME);
-            // console.log('Contest code: ',contestCODE);
-            // console.log('Contest name: ',contestNAME);
-            // console.log('Start: ',Start);
-            // console.log('End: ',End);
-            console.log(parseCodeChefDate(Start[0]));
-            AppendCodeChef(contestCODE, contestNAME, Start, End);
-        });
+    fetch("https://www.codechef.com/api/list/contests/all?sort_by=START&sorting_order=asc&offset=0&mode=premium", requestOptions)
+		.then(response => response.json())
+		.then(result => {
+      		AppendCodeChef(result);
+		}).catch(error => console.log('error', error));
 
     document.getElementById('github').onclick = () => {
-        console.log("Gthub Click");
         let newURL = "https://github.com/Aakash-Kumar-Goryan/Coding_Contest_Reminder_extention";
         chrome.tabs.create({ url: newURL });
     }
-
     $('.ui.accordion').accordion();
-}
-let parseCodeChefDate = (date) => {
-    /// Format being parsed : "01 Feb 2020 <br> 21:05:00"
-    let month = {
-        "Jan" : "01",
-        "Feb" : "02",
-        "Mar" : "03",
-        "Apr" : "04"
-    }
-    let arr = date.split(" ");
-    let t = arr[4].split(":");
-    let p = new Date(arr[2]+"-"+month[arr[1]]+"-"+arr[0]+"T"+t[0]+":"+t[1]+"Z");
-    let DateParsed = new Date(p.getTime() + (p.getTimezoneOffset()*60*1000));   /// correcting according to local time zone
-    return DateParsed;
 }
 
 let AddLoading = () => {
@@ -126,7 +109,7 @@ let AppendCodeforces = (data) => {
     }
 }
 
-let AppendCodeChef = (contestCODE, contestNAME, Start, End) => {
+let AppendCodeChef = (data) => {
     let AccordianContent = `<div class="title">
                                 <i class="dropdown icon"></i>
                                     CodeChef	
@@ -145,12 +128,13 @@ let AppendCodeChef = (contestCODE, contestNAME, Start, End) => {
                       </tr>`;
     document.getElementById('CodeChef').getElementsByTagName('thead')[0].innerHTML = theadContent;
     let tbodyContent = "";
-    for (let i = 0; i < contestCODE.length; i++) {
+    let futureContest = data.future_contests;
+    for (let i = 0; i < futureContest.length; i++) {
             tbodyContent += `<tr>
-                                <td data-label="CODE">${contestCODE[i]}</td>
-                                <td data-label="NAME">${contestNAME[i]}</td>
-                                <td data-label="START">${Start[i]}</td>
-                                <td data-label="END">${End[i]}</td>
+                                <td data-label="CODE">${futureContest[i].contest_code}</td>
+                                <td data-label="NAME">${futureContest[i].contest_name}</td>
+                                <td data-label="START">${futureContest[i].contest_start_date}</td>
+                                <td data-label="END">${futureContest[i].contest_end_date}</td>
                             </tr>`
     }
     document.getElementById('CodeChef').getElementsByTagName('tbody')[0].innerHTML = tbodyContent;

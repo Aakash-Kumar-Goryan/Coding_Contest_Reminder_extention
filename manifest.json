@@ -19,7 +19,7 @@
     ],
     "background": {
         "scripts": [
-            "config.js",
+            "contentscript.js",
             "background.js"
         ],
         "persistent": false
